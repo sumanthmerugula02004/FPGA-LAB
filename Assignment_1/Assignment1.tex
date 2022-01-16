@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage{karnaugh-map}
+\title{EE5803 FPGA Lab Assignment 1}
+\author{EE22MTECH02004  Sumanth Naidu Merugula}
+\begin{document}
+\maketitle
+\section{Question}
+[CBSE 2018 Q6 (d)] : Reduce the following Boolean Expression to its simplest form using K-map $$G(U,V,W,Z)=\sum(3,5,6,7,11,12,13,15)$$          
+\section{Solution}
+Simplification using K-map:
+
+\begin{karnaugh-map}[4][4][1][$WZ$][$UV$]
+        \minterms{3,5,6,7,11,12,13,15}
+        \maxterms{0,1,2,4,8,9,10,14}
+        \implicant{7}{6}
+        \implicant {12}{13}
+        \implicant {3}{11}
+        \implicant {5}{15}     
+\end{karnaugh-map}
+
+Simplified expression from above map can be written as $$G = WZ + VZ + UVW' + U'VW$$ 
+NAND realization : To realize the above equation using NAND logic, the following steps are followed 
+$$(G')' = ((WZ + VZ + UVW' + U'VW)')'$$
+$$G = ((WZ)'(VZ)'(UVW')'(U'VW)')'$$
+\end{document}
+
