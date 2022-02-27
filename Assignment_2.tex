@@ -1,0 +1,157 @@
+%\documentclass{article}
+\documentclass[14pt]{article}
+\usepackage{karnaugh-map}
+\usepackage{circuitikz}
+\usepackage[width=29.70cm, height=21.00cm, left=2.00cm, right=2.00cm, top=2cm, bottom=2cm]{geometry}
+\title{EE5803 FPGA Lab Assignment 2}
+\author{EE22MTECH02004  Sumanth Naidu Merugula}
+\begin{document}
+\maketitle
+\section{Question}
+[CBSE 2018 Q6 (d)] : Reduce the following Boolean Expression to its simplest form using K-map and implement its NAND realisation on an Arduino UNO board.  
+\begin{equation}
+G(U,V,W,Z)=\sum(3,5,6,7,11,12,13,15) 
+\end{equation}
+\section{Solution}
+\subsection{Truth table}
+The truth table for the given boolean expression $G$ is as follows
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|} 
+\hline
+$U$ & $V$ & $W$  & $Z$ & $G(U,V,W,Z)$  \\ 
+\hline
+0 & 0 & 0 & 0 & 0     \\ 
+\hline
+0 & 0 & 0 & 1 & 0     \\ 
+\hline
+0 & 0 & 1 & 0 & 0     \\ 
+\hline
+0 & 0 & 1 & 1 & 1     \\ 
+\hline
+0 & 1 & 0 & 0 & 0     \\ 
+\hline
+0 & 1 & 0 & 1 & 1     \\ 
+\hline
+0 & 1 & 1 & 0 & 1     \\ 
+\hline
+0 & 1 & 1 & 1 & 1     \\ 
+\hline
+1 & 0 & 0 & 0 & 0     \\ 
+\hline
+1 & 0 & 0 & 1 & 0     \\ 
+\hline
+1 & 0 & 1 & 0 & 0     \\ 
+\hline
+1 & 0 & 1 & 1 & 1     \\ 
+\hline
+1 & 1 & 0 & 0 & 1     \\ 
+\hline
+1 & 1 & 0 & 1 & 1     \\ 
+\hline
+1 & 1 & 1 & 0 & 0     \\ 
+\hline
+1 & 1 & 1 & 1 & 1     \\ 
+\hline
+\end{tabular}
+\caption{Truth table for Function G}
+\end{table}
+
+\subsection{K-map for simplification}
+\begin{figure}
+\begin{center}
+\begin{karnaugh-map}[4][4][1][$WZ$][$UV$]
+        \minterms{3,5,6,7,11,12,13,15}
+        \maxterms{0,1,2,4,8,9,10,14}
+        \implicant{7}{6}
+        \implicant {12}{13}
+        \implicant {3}{11}
+        \implicant {5}{15}    
+\end{karnaugh-map}
+\end{center}
+\caption{K-map for given boolean expression}
+\label{kmap}
+\end{figure}
+
+
+Simplified expression from K-map can be written as 
+\begin{equation}
+G = WZ + VZ + UVW' + U'VW
+\end{equation}
+Please refer to Figure 1. 
+
+\subsection{NAND logic diagram}
+To realize the above equation using NAND logic, the following steps are followed 
+\begin{equation}
+(G')' = ((WZ + VZ + UVW' + U'VW)')'
+\end{equation}
+\begin{equation}
+G = ((WZ)'(VZ)'(UVW')'(U'VW)')'
+\end{equation}
+
+Please refer to Figure 2.
+\begin{figure}[h!]
+\begin{center}
+\begin{circuitikz}
+\draw
+(0,0)node[nand port](mynand1){}
+(0,2)node[nand port](mynand2){}
+(0,4)node[nand port](mynand3){}
+(0,6)node[nand port](mynand4){}
+(0,8)node[nand port](mynand5){}
+(2,1)node[nand port](mynand6){}
+(2,4)node[nand port](mynand7){}
+(4,1)node[nand port](mynand8){}
+(4,3)node[nand port](mynand9){}
+(6,1)node[nand port](mynand10){}
+(8,2)node[nand port](mynand11){}
+(8,7)node[nand port](mynand12){}
+(10,2)node[nand port](mynand13){}
+(10,7)node[nand port](mynand14){}
+(12,4)node[nand port](mynand15){}
+
+
+(mynand5.out)|-(mynand12.in 1)
+(mynand4.out)|-(mynand12.in 2)
+(mynand12.out)|-(mynand14.in 1)
+(mynand12.out)|-(mynand14.in 2)
+(mynand14.out)|-(mynand15.in 1)
+(mynand1.out)|-(mynand6.in 1)
+(mynand6.out)|-(mynand8.in 1)
+(mynand6.out)|-(mynand8.in 2)
+(mynand8.out)|-(mynand10.in 1)
+(mynand10.out)|-(mynand11.in 2)
+(mynand9.out)|-(mynand11.in 1)
+(mynand11.out)|-(mynand13.in 1)
+(mynand11.out)|-(mynand13.in 2)
+(mynand13.out)|-(mynand15.in 2)
+(mynand3.out)|-(mynand7.in 1)
+(mynand3.out)|-(mynand7.in 2)
+(mynand2.out)|-(mynand9.in 2)
+(mynand7.out)|-(mynand9.in 1)
+
+
+(mynand1.in 1) -- (mynand1.in 2)
+(mynand1.in 1 |- mynand1.out) to [short,*-] (-2,0)
+(mynand2.in 1) -- (mynand2.in 2)
+(mynand2.in 1 |- mynand2.out) to [short,*-] (-2,2)
+
+(mynand5.in 1) node      [anchor=east]           {Z}
+(mynand5.in 2) node      [anchor=east]           {W}
+(mynand4.in 1) node      [anchor=east]           {Z}
+(mynand4.in 2) node      [anchor=east]           {V}
+(mynand3.in 1) node      [anchor=east]           {U}
+(mynand3.in 2) node      [anchor=east]           {V}
+(mynand2.in 1) node      [anchor=east]           {W}
+(mynand1.in 1) node      [anchor=east]           {U}
+(mynand6.in 2) node      [anchor=east]           {V}
+(mynand10.in 2) node     [anchor=east]           {W}
+(mynand15.out) node      [anchor=west]           {G};
+\end{circuitikz}
+\end{center}
+\caption{Logic circuit using NAND gate}
+\label{ckt1}
+\end{figure}
+
+\end{document}
+
