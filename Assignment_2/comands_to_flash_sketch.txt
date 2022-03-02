@@ -1,0 +1,17 @@
+# The following to be executed in WSL terminal
+# Creating object file from source file
+avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o main.o main.c
+
+# Creating the executable file
+avr-gcc -mmcu=atmega328p main.o -o main
+
+# Converting executable file to binary file
+avr-objcopy -O ihex main main.hex
+
+
+# This command should be exbashecuted in windows cmd
+# Uploading the binary file
+avrdude -v -V -patmega328p -carduino "-PCOM1" -b115200 -D "-Uflash:w:/mnt/c/Users/Rama/Desktop/sumanth/MTech_course_work/Semester_1/EE5803_FPGA_lab/Assignments/Assignment_2/src /main.hex:i"
+
+
+
