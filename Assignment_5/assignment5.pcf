@@ -1,0 +1,7 @@
+set_io u 5
+set_io v 64
+set_io w 60
+set_io z 55
+set_io redled 34
+set_io greenled 39
+set_io blueled 38
